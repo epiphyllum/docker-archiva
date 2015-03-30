@@ -1,8 +1,10 @@
 #!/bin/bash
 
 
+mkdir -p assets/packages;
 for dir in `ls assets/split`; do
-    cat assets/split/$dir/x* > assets/packages/$dir
+    name=${dir//-split};
+    cat assets/split/$dir/x* > assets/packages/$name
 done
 
 
