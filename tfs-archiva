@@ -31,7 +31,7 @@ VERSION=${VERSION:-"latest"};
 
 # rest parameters
 if [ $# -lt 1 ]; then
-    Usage;
+    echo "Usage: tfs-archiva run|start|stop|clean"
 fi
 
 # 启动容器
