@@ -1,0 +1,89 @@
+#!/bin/bash
+
+########################################################################
+# common
+IP=172.17.88.5
+MASK=24
+GATEWAY=172.17.42.1
+VERSION=2.6.3
+
+# db
+DB_NAME=redmine_production
+DB_USER=mysql
+DB_PASS=mysql
+
+# mail
+SMTP_USER=18874881230@163.com
+SMTP_PASS=wyqler.1234
+SMTP_HOST=smtp.163.com
+SMTP_PORT=25
+SMTP_DOMAIN=163.com
+SMTP_STARTTLS=true
+
+# data && log && temp && repositories
+VOLUME_DATA=$HOME/appstore/tfs/redmine/data
+VOLUME_LOG=$HOME/appstore/tfs/redmine/log
+VOLUME_TEMP=$HOME/appstore/tfs/redmine/temp
+VOLUME_REPO=$HOME/appstore/tfs/redmine/repo
+########################################################################
+
+VERSION=${VERSION:-"latest"};
+
+# rest parameters
+if [ $# -lt 1 ]; then
+    Usage;
+fi
+
+# 启动容器
+function start_docker {
+    sudo docker start tfs-archiva;
+    sudo pipework docker0 tfs-archiva $IP/$MASK@$GATEWAY
+    echo "IP address is[$IP/$MASK] and gateway[$GATEWAY]";
+}
+
+# 停止容器
+function stop_docker {
+    sudo docker stop tfs-archiva;
+}
+
+# 创建+初始化+启动容器
+function run_docker {
+    echo "run docker using image[hary/archiva] version[$VERSION]";
+    # 启动容器
+    sudo docker run -i -t -d \
+    --name=tfs-archiva \
+    --hostname=tfs-archiva \
+    --link tfs-mysql:mysql \
+    -e "DB_NAME=$DB_NAME" \
+    -e "DB_USER=$DB_USER" \
+    -e "DB_PASS=$DB_PASS" \
+    -v $VOLUME_DATA:/home/archiva/opt/archiva/data \
+    -v $VOLUME_LOG:/home/archiva/opt/archiva/logs \
+    -v $VOLUME_TEMP:/home/archiva/opt/archiva/temp \
+    -v $VOLUME_REPO:/home/archiva/opt/archiva/repositories \
+    hary/archiva:$VERSION
+
+    # 设置容器地址
+    sudo pipework docker0 tfs-archiva $IP/$MASK@$GATEWAY
+    echo "IP address is[$IP/$MASK] and gateway[$GATEWAY]";
+}
+
+
+#####################################################################################
+# main
+#####################################################################################
+case $1 in
+   # create container and initialize it and running
+   run) run_docker;;
+
+   # docker start
+   start) start_docker;;
+
+   # docker stop_docker
+   stop) stop_docker;;
+
+   # clean volume data
+   clean) sudo rm -fr $VOLUME_DATA/*  $VOLUME_LOG/* $VOLUME_TEMP/* $VOLUME_REPOSITORIES;;
+esac
+
+

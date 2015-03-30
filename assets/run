@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export JAVA_HOME=/home/archiva/opt/jdk
+export ARCHIVA_HOME=/home/archiva/opt/archiva
+export PATH=$JAVA_HOME/bin:$ARCHIVA_HOME/bin:$PATH
+
+archiva console
