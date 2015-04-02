@@ -2,23 +2,15 @@
 
 ########################################################################
 # common
-IP=172.17.88.5
+IP=172.17.88.3
 MASK=24
 GATEWAY=172.17.42.1
-VERSION=2.6.3
+VERSION=2.2.0
 
 # db
-DB_NAME=redmine_production
+DB_NAME=archiva_production
 DB_USER=mysql
 DB_PASS=mysql
-
-# mail
-SMTP_USER=18874881230@163.com
-SMTP_PASS=wyqler.1234
-SMTP_HOST=smtp.163.com
-SMTP_PORT=25
-SMTP_DOMAIN=163.com
-SMTP_STARTTLS=true
 
 # data && log && temp && repositories
 VOLUME_DATA=$HOME/appstore/tfs/redmine/data
